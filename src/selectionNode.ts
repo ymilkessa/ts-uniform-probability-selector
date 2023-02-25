@@ -1,3 +1,5 @@
+import binarySearch = require("binary-search");
+
 abstract class SelectionNode<ReturnType, StorageType> {
   private children: Array<SelectionNode<ReturnType, StorageType>>;
   data: StorageType;
@@ -61,6 +63,27 @@ abstract class SelectionNode<ReturnType, StorageType> {
     this.parent?.computeAndSetWeights();
   }
 
+  /**
+   * Comparator to be used in the binary search.
+   * Return 1 if weightedIndex >= this.cumWeights[indexToCheck]
+   * Return 0 if weightedIndex < this.cumWeights[indexToCheck] AND either
+   *          (a) indexToCheck === 0, OR
+   *          (b) weightedIndex > this.cumWeights[indexToCheck - 1]
+   * Return -1 if otherwise.
+   */
+  private comparator(weightedIndex: number, indexToCheck: number): number {
+    if (weightedIndex >= this.cumWeights[indexToCheck]) {
+      return 1;
+    }
+    if (
+      indexToCheck === 0 ||
+      weightedIndex > this.cumWeights[indexToCheck - 1]
+    ) {
+      return 0;
+    }
+    return -1;
+  }
+
   getSomethingAtRandom(): ReturnType {
     if (this.isLeaf()) {
       return this.getSomethingUsingSnippet(null, null);
@@ -76,17 +99,21 @@ abstract class SelectionNode<ReturnType, StorageType> {
         "Error: number of child nodes does not match number of weights."
       );
     }
+
+    // Get a random number and use binary search to find the index for the selected child node
     const weightedIndex = Math.random() * this.getSumOfChildWeights();
-    for (let i = 0; i < this.children.length; i++) {
-      if (this.cumWeights[i] > weightedIndex) {
-        const outputFromChild = this.children[i].getSomethingAtRandom();
-        return this.getSomethingUsingSnippet(outputFromChild, i);
-      }
-    }
-    // If you're still here, throw an error.
-    throw new Error(
-      "Error: no child node selected. Please ensure that the weights add up to the total weight stored in each node."
+    const index = binarySearch(
+      this.cumWeights,
+      weightedIndex,
+      (_mid, weightedIn, index, _array) => this.comparator(weightedIn, index!)
     );
+    if (index > this.children.length) {
+      throw new Error(
+        "Error: Something went wrong when picking an index for a child node"
+      );
+    }
+    const outputFromChild = this.children[index].getSomethingAtRandom();
+    return this.getSomethingUsingSnippet(outputFromChild, index);
   }
 
   /**

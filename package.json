@@ -12,5 +12,8 @@
   "scripts": {
     "test": "jest",
     "build": "npx tsc"
+  },
+  "dependencies": {
+    "binary-search": "^1.3.6"
   }
 }
