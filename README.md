@@ -1,6 +1,6 @@
 # Uniform Probability Selector
 
-Module for making equally random selections of items that are arranged in a tree structure. It contains two classes described blow. (TODO: ADD SOME LINK HERE)
+Module for making equally random selections of items that are arranged in a tree structure. It contains two classes described blow.
 
 ## Classes
 
