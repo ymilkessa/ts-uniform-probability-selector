@@ -1,9 +1,19 @@
 {
   "name": "uniform-probability-selector",
   "version": "0.1.0",
-  "keywords": [],
+  "description": "Ensuring uniform randomness when generating something using a recursive process.",
+  "keywords": [
+    "random selection",
+    "weighted selection",
+    "text generation"
+  ],
   "author": "Yofti Milkessa",
   "license": "ISC",
+  "homepage": "https://github.com/ymilkessa/ts-uniform-probability-selector#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ymilkessa/ts-uniform-probability-selector.git"
+  },
   "devDependencies": {
     "@types/jest": "^29.4.0",
     "jest": "^29.4.3",

@@ -89,14 +89,14 @@ Here is a simple example that generates a dialogue.
 ```typescript
 import { TextBuilderNode } from "uniform-probability-selector";
 
-const theLover = new TextBuilderNode([
+const personA = new TextBuilderNode([
   "Do you... do you love me?\n",
   "I love you. Do you feel the same?\n",
   "You love me, right?\n",
   "Please, tell me you love me.\n",
 ]);
 
-const theFriendZoner = new TextBuilderNode([
+const personB = new TextBuilderNode([
   "No, I don't love you.",
   "Hell no.",
   "In year dreams, maybe.",
@@ -105,10 +105,10 @@ const theFriendZoner = new TextBuilderNode([
   "You're... you're a good friend.",
 ]);
 
-theLover.addChild(theFriendZoner);
+personA.addChild(personB);
 
 // Print a randomly selected dialogue
-console.log(theLover.makeRandomSelection());
+console.log(personA.makeRandomSelection());
 // "Do you... do you love me?"
-//   "Hell no."
+//   "Of course I like you."
 ```
