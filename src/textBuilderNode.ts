@@ -5,12 +5,12 @@ class TextBuilderNode extends SelectionNode<string, Array<string>> {
     super(data);
   }
 
-  getSomethingUsingSnippet(
+  recursiveSelection(
     snippet: string | null,
     _childIndexUsed: number | null = null
   ): string {
-    const snippetIndex = Math.floor(Math.random() * this.data.length);
-    const snippetToUse = this.data[snippetIndex];
+    const snippetIndex = Math.floor(Math.random() * this.data!.length);
+    const snippetToUse = this.data![snippetIndex];
     if (this.isLeaf()) {
       return snippetToUse;
     }
@@ -22,9 +22,9 @@ class TextBuilderNode extends SelectionNode<string, Array<string>> {
 
   computeWeight(): number {
     if (this.isLeaf()) {
-      return this.data.length;
+      return this.data!.length;
     }
-    return this.data.length * this.getSumOfChildWeights();
+    return this.data!.length * this.getSumOfChildWeights();
   }
 }
 

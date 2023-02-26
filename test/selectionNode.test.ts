@@ -10,8 +10,8 @@ describe("Test SelectionNode", () => {
   const parentNode = new NumberBuilderNode(allNumbers);
 
   beforeAll(() => {
-    parentNode.add_child(oddNumbersNode);
-    parentNode.add_child(evenNumbersNode);
+    parentNode.addChild(oddNumbersNode);
+    parentNode.addChild(evenNumbersNode);
   });
 
   it("The child nodes have the expected weights", () => {
@@ -31,13 +31,13 @@ describe("Test SelectionNode", () => {
     expect(parentNode.isLeaf()).toBe(false);
   });
 
-  it("getSomethingAtRandom() for our test class returns valid numbers.", () => {
-    expect(typeof parentNode.getSomethingAtRandom()).toBe("number");
+  it("makeRandomSelection() for our test class returns valid numbers.", () => {
+    expect(typeof parentNode.makeRandomSelection()).toBe("number");
   });
 
-  it("getSomethingUsingSnippet() for our test class returns numbers >= the given snippet number", () => {
+  it("recursiveSelection() for our test class returns numbers >= the given snippet number", () => {
     const snippet = 2;
-    const output = parentNode.getSomethingUsingSnippet(snippet, null);
+    const output = parentNode.recursiveSelection(snippet, null);
     expect(output).toBeGreaterThanOrEqual(snippet);
   });
 
@@ -46,7 +46,7 @@ describe("Test SelectionNode", () => {
     const newOddNumbersNode = new NumberBuilderNode(newOddNumbers);
     const oldWeight = parentNode.getWeight();
     expect(newOddNumbersNode.getWeight()).toBe(oddNumbers.length);
-    newOddNumbersNode.data.push(11);
+    newOddNumbersNode.data!.push(11);
     newOddNumbersNode.computeAndSetWeights();
     expect(newOddNumbersNode.getWeight()).toBe(oddNumbers.length + 1);
   });
@@ -54,7 +54,7 @@ describe("Test SelectionNode", () => {
   it("Ensure that computeAndSetWeights() updates the weight of the parent node", () => {
     const lastDigitNumber = new NumberBuilderNode([...oddNumbers]);
     const secondToLastDigitNumber = new NumberBuilderNode([...evenNumbers]);
-    secondToLastDigitNumber.add_child(lastDigitNumber);
+    secondToLastDigitNumber.addChild(lastDigitNumber);
     const oldSize = evenNumbers.length * oddNumbers.length;
     expect(secondToLastDigitNumber.getWeight()).toBe(oldSize);
     lastDigitNumber.data = [...oddNumbers, ...evenNumbers];

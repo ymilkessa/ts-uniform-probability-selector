@@ -2,7 +2,7 @@ import binarySearch = require("binary-search");
 
 abstract class SelectionNode<ReturnType, StorageType> {
   private children: Array<SelectionNode<ReturnType, StorageType>>;
-  data: StorageType;
+  data: StorageType | null;
   private cumWeights: Array<number>;
   /**
    * This is the NOT just the sum of weights of the child nodes.
@@ -15,7 +15,7 @@ abstract class SelectionNode<ReturnType, StorageType> {
    */
   parent: SelectionNode<ReturnType, StorageType> | null;
 
-  constructor(data: StorageType) {
+  constructor(data: StorageType | null = null) {
     this.children = [];
     this.cumWeights = [];
     this.data = data;
@@ -23,7 +23,7 @@ abstract class SelectionNode<ReturnType, StorageType> {
     this.parent = null;
   }
 
-  add_child(child: SelectionNode<ReturnType, StorageType>) {
+  addChild(child: SelectionNode<ReturnType, StorageType>) {
     this.children.push(child);
     this.cumWeights.push(this.getSumOfChildWeights() + child.getWeight());
     child.parent = this;
@@ -65,28 +65,28 @@ abstract class SelectionNode<ReturnType, StorageType> {
 
   /**
    * Comparator to be used in the binary search.
-   * Return 1 if weightedIndex >= this.cumWeights[indexToCheck]
+   * Return -1 if weightedIndex >= this.cumWeights[indexToCheck]
    * Return 0 if weightedIndex < this.cumWeights[indexToCheck] AND either
    *          (a) indexToCheck === 0, OR
    *          (b) weightedIndex > this.cumWeights[indexToCheck - 1]
-   * Return -1 if otherwise.
+   * Return +1 if otherwise.
    */
   private comparator(weightedIndex: number, indexToCheck: number): number {
-    if (weightedIndex >= this.cumWeights[indexToCheck]) {
-      return 1;
+    if (this.cumWeights[indexToCheck] <= weightedIndex) {
+      return -1;
     }
     if (
       indexToCheck === 0 ||
-      weightedIndex > this.cumWeights[indexToCheck - 1]
+      this.cumWeights[indexToCheck - 1] <= weightedIndex
     ) {
       return 0;
     }
-    return -1;
+    return 1;
   }
 
-  getSomethingAtRandom(): ReturnType {
+  makeRandomSelection(): ReturnType {
     if (this.isLeaf()) {
-      return this.getSomethingUsingSnippet(null, null);
+      return this.recursiveSelection(null, null);
     }
     if (!this.children.length || !this.cumWeights.length) {
       const missingItem = !this.children.length
@@ -107,13 +107,13 @@ abstract class SelectionNode<ReturnType, StorageType> {
       weightedIndex,
       (_mid, weightedIn, index, _array) => this.comparator(weightedIn, index!)
     );
-    if (index > this.children.length) {
+    if (index > this.children.length || index < 0) {
       throw new Error(
         "Error: Something went wrong when picking an index for a child node"
       );
     }
-    const outputFromChild = this.children[index].getSomethingAtRandom();
-    return this.getSomethingUsingSnippet(outputFromChild, index);
+    const outputFromChild = this.children[index].makeRandomSelection();
+    return this.recursiveSelection(outputFromChild, index);
   }
 
   /**
@@ -122,7 +122,7 @@ abstract class SelectionNode<ReturnType, StorageType> {
    * This function should define the base cases for when this node is a leaf,
    * as well as the recursive case for when this is not a leaf.
    */
-  abstract getSomethingUsingSnippet(
+  abstract recursiveSelection(
     snippet: ReturnType | null,
     _childIndexUsed: number | null
   ): ReturnType;

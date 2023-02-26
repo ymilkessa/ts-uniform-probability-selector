@@ -41,9 +41,9 @@ describe("Test TextBuilderNode", () => {
   const vehiclesNode = new TextBuilderNode(vehicles);
 
   beforeAll(() => {
-    vehicleActionsNode.add_child(vehiclesNode);
-    startPhrasesNode.add_child(fruitsNode);
-    startPhrasesNode.add_child(vehicleActionsNode);
+    vehicleActionsNode.addChild(vehiclesNode);
+    startPhrasesNode.addChild(fruitsNode);
+    startPhrasesNode.addChild(vehicleActionsNode);
   });
 
   it("The text nodes have the expected weights", () => {
@@ -58,12 +58,9 @@ describe("Test TextBuilderNode", () => {
     expect(startPhrasesNode.getWeight()).toBe(startPhrasesWeight);
   });
 
-  it("getSomethingUsingSnippet() for our test class returns a string that contains the given snippet", () => {
+  it("recursiveSelection() for our test class returns a string that contains the given snippet", () => {
     const arbitrarySnippet = "some random snippet yo";
-    const output = startPhrasesNode.getSomethingUsingSnippet(
-      arbitrarySnippet,
-      null
-    );
+    const output = startPhrasesNode.recursiveSelection(arbitrarySnippet, null);
     const startIndex = output.length - arbitrarySnippet.length;
     expect(output.slice(startIndex, output.length)).toBe(arbitrarySnippet);
   });
