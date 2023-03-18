@@ -1,6 +1,6 @@
 {
   "name": "uniform-probability-selector",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Ensuring uniform randomness when generating something using a recursive process.",
   "keywords": [
     "random selection",
