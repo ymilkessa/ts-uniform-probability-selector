@@ -84,9 +84,9 @@ abstract class SelectionNode<ReturnType, StorageType> {
     return 1;
   }
 
-  makeRandomSelection(): ReturnType {
+  makeRandomSelection(_args: any = undefined): ReturnType {
     if (this.isLeaf()) {
-      return this.recursiveSelection(null, null);
+      return this.recursiveSelection(null, null, _args);
     }
     if (!this.children.length || !this.cumWeights.length) {
       const missingItem = !this.children.length
@@ -112,8 +112,8 @@ abstract class SelectionNode<ReturnType, StorageType> {
         "Error: Something went wrong when picking an index for a child node"
       );
     }
-    const outputFromChild = this.children[index].makeRandomSelection();
-    return this.recursiveSelection(outputFromChild, index);
+    const outputFromChild = this.children[index].makeRandomSelection(_args);
+    return this.recursiveSelection(outputFromChild, index, _args);
   }
 
   /**
@@ -124,7 +124,8 @@ abstract class SelectionNode<ReturnType, StorageType> {
    */
   abstract recursiveSelection(
     snippet: ReturnType | null,
-    _childIndexUsed: number | null
+    _childIndexUsed: number | null,
+    _args: any
   ): ReturnType;
 
   /**
