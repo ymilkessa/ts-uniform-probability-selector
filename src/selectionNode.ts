@@ -1,7 +1,7 @@
 import binarySearch = require("binary-search");
 
 abstract class SelectionNode<ReturnType, StorageType> {
-  private children: Array<SelectionNode<ReturnType, StorageType>>;
+  children: Array<SelectionNode<any, any>>;
   data: StorageType | null;
   private cumWeights: Array<number>;
   /**
@@ -23,7 +23,7 @@ abstract class SelectionNode<ReturnType, StorageType> {
     this.parent = null;
   }
 
-  addChild(child: SelectionNode<ReturnType, StorageType>) {
+  addChild(child: SelectionNode<any, any>) {
     this.children.push(child);
     this.cumWeights.push(this.getSumOfChildWeights() + child.getWeight());
     child.parent = this;
@@ -123,7 +123,7 @@ abstract class SelectionNode<ReturnType, StorageType> {
    * as well as the recursive case for when this is not a leaf.
    */
   abstract recursiveSelection(
-    snippet: ReturnType | null,
+    snippet: any,
     _childIndexUsed: number | null,
     _args: any
   ): ReturnType;
